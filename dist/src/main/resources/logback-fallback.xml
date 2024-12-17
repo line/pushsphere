@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT_BRIEF" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.linecorp.armeria" level="INFO" />
+  <logger name="com.linecorp.armeria.internal.server.annotation.AnnotatedServiceFactory" level="ERROR" />
+  <logger name="com.linecorp.armeria.client.DefaultDnsCache" level="ERROR" />
+  <logger name="com.linecorp.pushsphere" level="INFO" />
+
+  <logger name="com.linecorp.armeria.logging.access" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT_BRIEF"/>
+  </logger>
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
