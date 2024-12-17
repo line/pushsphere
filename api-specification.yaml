@@ -1,0 +1,450 @@
+openapi: 3.0.3
+
+info:
+  title: Pushsphere API document
+  version: 1.0.0
+
+security:
+  - BearerAuth: []
+  - AnonymousAuth: []
+
+paths:
+  /api/v1/{profileSetGroup}/{profileSet}/authorize:
+    get:
+      description: Tests if the user is authorized to send push notifications.
+      parameters:
+        - in: path
+          name: profileSetGroup
+          description: The name of the profile set group
+          required: true
+          schema:
+            type: string
+          examples:
+            talk:
+              value: "talk"
+            voom:
+              value: "voom"
+        - in: path
+          name: profileSet
+          description: The name of the profile set
+          required: true
+          schema:
+            type: string
+          examples:
+            main:
+              value: "main"
+            voip:
+              value: "voip"
+      responses:
+        '200':
+          description: OK
+        default:
+          description: General response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushResult'
+
+  /api/v1/{profileSetGroup}/{profileSet}/send:
+    post:
+      description: send push notification asynchronously
+      parameters:
+        - in: path
+          name: profileSetGroup
+          description: The name of the profile set group
+          required: true
+          schema:
+            type: string
+          examples:
+            talk:
+              value: "talk"
+            voom:
+              value: "voom"
+        - in: path
+          name: profileSet
+          description: The name of the profile set
+          required: true
+          schema:
+            type: string
+          examples:
+            main:
+              value: "main"
+            voip:
+              value: "voip"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/PushRequest'
+            examples:
+              AppleSimpleAlert:
+                $ref: '#/components/examples/AppleSimpleAlert'
+              AppleSilentPush:
+                $ref: '#/components/examples/AppleSilentPush'
+
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+        '503':
+          description: Service Unavailable
+        default:
+          description: General response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushResult'
+
+  /api/v1/{profileSetGroup}/{profileSet}/send/raw:
+    post:
+      description: send push notification with raw json string asynchronously
+      parameters:
+        - in: path
+          name: profileSetGroup
+          description: The name of the profile set group
+          required: true
+          schema:
+            type: string
+          examples:
+            first:
+              value: "my-first-service"
+            second:
+              value: "my-second-service"
+        - in: path
+          name: profileSet
+          description: The name of the profile set
+          required: true
+          schema:
+            type: string
+          examples:
+            main:
+              value: "main"
+            alternative:
+              value: "alternative"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RawPushRequest'
+            examples:
+              AppleSimpleAlertRaw:
+                $ref: '#/components/examples/AppleSimpleAlert'
+              AppleSilentPushRaw:
+                $ref: '#/components/examples/AppleSilentPush'
+
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+        '503':
+          description: Service Unavailable
+        default:
+          description: General response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushResult'
+
+components:
+  schemas:
+    PushProvider:
+      type: string
+      enum:
+        - APPLE
+        - FIREBASE
+        - WEB
+    ApnsPushType:
+      type: string
+      enum:
+        - alert
+        - background
+        - location
+        - voip
+        - complication
+        - fileprovider
+        - mdm
+        - liveactivity
+        - pushtotalk
+
+    ApplePushSound:
+      type: object
+      properties:
+        critical:
+          type: integer
+        name:
+          type: string
+        volume:
+          type: integer
+
+    ApplePushAlert:
+      type: object
+      properties:
+        subtitle:
+          type: string
+        titleLocKey:
+          type: string
+        titleLocArgs:
+          type: array
+          items:
+            type: string
+        subtitleLocKey:
+          type: string
+        subtitleLocArgs:
+          type: array
+          items:
+            type: string
+        locKey:
+          type: string
+        locArgs:
+          type: array
+          items:
+            type: string
+
+    ApplePushProps:
+      type: object
+      additionalProperties: true
+      description: Push properties of APNs. If you want to send custom data(e.g. silent push), add data at this object level.
+      properties:
+        headers:
+          type: object
+          properties:
+            apnsPushType:
+              $ref: '#/components/schemas/ApnsPushType'
+            apnsId:
+              type: string
+              description: Canonical UUID that’s the unique ID for the notification
+            apnsExpiration:
+              type: number
+              description: The date at which the notification is no longer valid. This value is a UNIX epoch expressed in seconds (UTC).
+            apnsPriority:
+              type: number
+            apnsCollapseId:
+              type: string
+        aps:
+          type: object
+          properties:
+            alert:
+              oneOf:
+                - type: string
+                - $ref: '#/components/schemas/ApplePushAlert'
+            badge:
+              type: integer
+            sound:
+              oneOf:
+                - type: string
+                - $ref: '#/components/schemas/ApplePushSound'
+            threadId:
+              type: string
+            category:
+              type: string
+            contentAvailable:
+              type: integer
+              description: Set it 1 for silent background update
+            mutableContent:
+              type: integer
+            targetContentId:
+              type: string
+            interruptionLevel:
+              type: string
+              enum:
+                - passive
+                - active
+                - time-sensitive
+                - critical
+            relevanceScore:
+              type: integer
+            filterCriteria:
+              type: string
+            staleDate:
+              type: integer
+            contentState:
+              type: object
+            timestamp:
+              type: integer
+            events:
+              type: string
+            dismissalDate:
+              type: number
+
+    Push:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        imageUri:
+          type: string
+          example: http://example.com/dog.png
+        appleProps:
+          $ref: '#/components/schemas/ApplePushProps'
+
+    PushRequest:
+      type: object
+      required:
+        - provider
+        - deviceToken
+        - push
+      properties:
+        provider:
+          $ref: '#/components/schemas/PushProvider'
+        deviceToken:
+          $ref: '#/components/schemas/DeviceToken'
+        idempotencyKey:
+          $ref: '#/components/schemas/IdempotencyKey'
+        push:
+          $ref: '#/components/schemas/Push'
+        variables:
+          type: object
+          description: Variables used for message formatting
+
+    RawPushRequest:
+      type: object
+      required:
+        - provider
+        - deviceToken
+        - rawPush
+      properties:
+        provider:
+          $ref: '#/components/schemas/PushProvider'
+        deviceToken:
+          $ref: '#/components/schemas/DeviceToken'
+        idempotencyKey:
+          $ref: '#/components/schemas/IdempotencyKey'
+        rawPush:
+          type: object
+          properties:
+            headers:
+              type: object
+              description: Header values that will be included at request to provider
+              example:
+                apns-push-type: alert
+                apns-expiration: 1688717713
+            content:
+              type: string
+              description: Raw json string to be sent
+              example: '{"aps":{"alert":{"title":"notification title","body":"read this"}}}'
+
+    PushResult:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: '#/components/schemas/PushStatus'
+        httpStatus:
+          type: integer
+          description: HTTP status code returned by the push provider
+        reason:
+          type: string
+          description: Human readable description of the result
+    PushStatus:
+      type: string
+      enum:
+        - SUCCESS
+        - INVALID_REQUEST
+        - UNREGISTERED
+        - QUOTA_EXCEEDED
+        - UNAVAILABLE
+        - INTERNAL_ERROR
+        - AUTH_FAILURE
+
+    IdempotencyKey:
+      type: string
+      description: Unique id for requested push generated on client side
+      example: 12345678-abcd-abcd-1234-abcdef012345
+
+    DeviceToken:
+      type: string
+      description: Device token specified by push provider
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: 'predefined token'
+    AnonymousAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'format: anonymous'
+
+  examples:
+    AppleSimpleAlert:
+      description: Simple Apple push notification
+      value:
+        provider: APPLE
+        deviceToken: example-token-12345
+        push:
+          title: New notification
+          body: Check this new notification
+          imageUri: http://example.com/dog.png
+          appleProps:
+            headers:
+              apns-push-type: alert
+            aps:
+              badge: 15
+              sound: bingbong.aiff
+
+    AppleSilentPush:
+      description: Apple silent push
+      value:
+        provider: APPLE
+        deviceToken: example-token-12345
+        appleProps:
+          aps:
+            contentAvailable: 1
+          backgroundUpdateValue: new value
+
+    AppleSimpleAlertRaw:
+      description: Simple Apple push notification
+      value:
+        provider: APPLE
+        deviceToken: example-token-12345
+        rawPush:
+          headers:
+            apns-push-type: alert
+          content:
+            aps:
+              alert:
+                title: New notification
+                body: Check this new notification
+                launch-image: http://example.com/dog.png
+              badge: 15
+              sound: bingbong.aiff
+
+    AppleSilentPushRaw:
+      description: Apple silent push
+      value:
+        provider: APPLE
+        deviceToken: example-token-12345
+        rawPush:
+          headers:
+            apns-push-type: background
+            apns-priority: 5
+          content:
+            aps:
+              contentAvailable: 1
+            backgroundUpdateValue: new value

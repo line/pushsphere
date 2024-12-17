@@ -1,0 +1,12 @@
+rootProject.name = 'pushsphere'
+
+apply from: "$rootDir/gradle/scripts/settings-flags.gradle"
+
+includeWithFlags ':client',           'java8', 'kotlin', 'publish'
+includeWithFlags ':common',           'java8', 'kotlin', 'publish'
+includeWithFlags ':dist',             'java17', 'kotlin'
+includeWithFlags ':dist-mock',        'java17', 'kotlin'
+includeWithFlags ':junit5',           'java8', 'kotlin', 'publish'
+includeWithFlags ':mock',             'java8', 'kotlin', 'publish'
+includeWithFlags ':server',           'java8', 'kotlin', 'publish'
+includeWithFlags ':testing-internal', 'java8', 'kotlin'

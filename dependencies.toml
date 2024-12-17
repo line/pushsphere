@@ -1,0 +1,148 @@
+[versions]
+armeria = "1.31.1"
+clikt = "4.4.0"
+jib = "3.4.3"
+junit = "5.10.3"
+jwt = "4.4.0"
+kotest = "5.9.1"
+kotlin-logging = "6.0.9"
+kotlinx-serialization = "1.6.3"
+kotlin = { strictly = "1.9.24" }
+kotlinx-coroutines = { strictly = "1.8.1" }
+ktlint-gradle-plugin = "12.1.0"
+# Upgrade logback to 1.4.x, kotlin-logging to 4.x, mockk to 1.13 when Armeria uses SLF4J 2.0.x or later.
+logback = "1.3.14"
+logback-contrib = "0.1.5"
+jackson = "2.17.1"
+micrometer = "1.13.1"
+mockk = "1.13.11"
+nexus-publish = "1.3.0"
+osdetector = "1.7.3"
+
+[boms]
+armeria = { module = "com.linecorp.armeria:armeria-bom", version.ref = "armeria" }
+junit = { module = "org.junit:junit-bom", version.ref = "junit" }
+
+[libraries.armeria]
+module = "com.linecorp.armeria:armeria"
+javadocs = "https://javadoc.io/doc/com.linecorp.armeria/armeria-javadoc/1.30.0/"
+[libraries.armeria-junit5]
+module = "com.linecorp.armeria:armeria-junit5"
+[libraries.armeria-kotlin]
+module = "com.linecorp.armeria:armeria-kotlin"
+[libraries.armeria-logback]
+module = "com.linecorp.armeria:armeria-logback13"
+[libraries.armeria-oauth2]
+module = "com.linecorp.armeria:armeria-oauth2"
+[libraries.armeria-prometheus1]
+module = "com.linecorp.armeria:armeria-prometheus1"
+[libraries.armeria-xds]
+module = "com.linecorp.armeria:armeria-xds"
+
+[libraries.clikt-jvm]
+module = "com.github.ajalt.clikt:clikt-jvm"
+version.ref = "clikt"
+
+[libraries.logback-classic]
+module = "ch.qos.logback:logback-classic"
+version.ref = "logback"
+[libraries.logback-core]
+module = "ch.qos.logback:logback-core"
+version.ref = "logback"
+
+[libraries.logback-json-classic]
+module = "ch.qos.logback.contrib:logback-json-classic"
+version.ref = "logback-contrib"
+[libraries.logback-jackson]
+module = "ch.qos.logback.contrib:logback-jackson"
+version.ref = "logback-contrib"
+
+[libraries.jackson-databind]
+module = "com.fasterxml.jackson.core:jackson-databind"
+version.ref = "jackson"
+
+[libraries.junit-jupiter]
+module = "org.junit.jupiter:junit-jupiter"
+javadocs = "https://junit.org/junit5/docs/5.5.2/api/"
+[libraries.junit-jupiter-api]
+module = "org.junit.jupiter:junit-jupiter-api"
+javadocs = "https://junit.org/junit5/docs/5.5.2/api/"
+
+[libraries.junit-platfrom-runner]
+module = "org.junit.platform:junit-platform-runner"
+
+[libraries.jwt]
+module = "com.auth0:java-jwt"
+version.ref = "jwt"
+javadocs = "https://www.javadoc.io/doc/com.auth0/java-jwt/4.4.0/"
+
+[libraries.kotlin-logging]
+module = "io.github.oshai:kotlin-logging-jvm"
+version.ref = "kotlin-logging"
+
+[libraries.kotlin-stdlib]
+module = "org.jetbrains.kotlin:kotlin-stdlib"
+version.ref = "kotlin"
+[libraries.kotlin-stdlib-common]
+module = "org.jetbrains.kotlin:kotlin-stdlib-common"
+version.ref = "kotlin"
+[libraries.kotlin-reflect]
+module = "org.jetbrains.kotlin:kotlin-reflect"
+version.ref = "kotlin"
+[libraries.kotlin-stdlib-jdk8]
+module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+version.ref = "kotlin"
+
+[libraries.kotlinx-coroutines]
+module = "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+version.ref = "kotlinx-coroutines"
+
+[libraries.kotlinx-coroutines-jdk8]
+module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8"
+version.ref = "kotlinx-coroutines"
+
+[libraries.kotlinx-coroutines-test]
+module = "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+version.ref = "kotlinx-coroutines"
+
+[libraries.kotlinx-serialization-hocon]
+module = "org.jetbrains.kotlinx:kotlinx-serialization-hocon"
+version.ref = "kotlinx-serialization"
+[libraries.kotlinx-serialization-json]
+module = "org.jetbrains.kotlinx:kotlinx-serialization-json"
+version.ref = "kotlinx-serialization"
+
+[libraries.kotest-assertions-core]
+module = "io.kotest:kotest-assertions-core"
+version.ref = "kotest"
+
+[libraries.kotest-assertions-json]
+module = "io.kotest:kotest-assertions-json"
+version.ref = "kotest"
+
+[libraries.kotest-common]
+module = "io.kotest:kotest-common"
+version.ref = "kotest"
+
+[libraries.kotest-framework-concurrency]
+module = "io.kotest:kotest-framework-concurrency"
+version.ref = "kotest"
+
+[libraries.micrometer-core]
+module = "io.micrometer:micrometer-core"
+version.ref = "micrometer"
+[libraries.micrometer-prometheus]
+module = "io.micrometer:micrometer-registry-prometheus"
+version.ref = "micrometer"
+
+[libraries.mockk]
+module = "io.mockk:mockk"
+version.ref = "mockk"
+
+[plugins]
+jib = { id = "com.google.cloud.tools.jib", version.ref = "jib"}
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle-plugin" }
+nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-publish" }
+osdetector = { id = "com.google.osdetector", version.ref = "osdetector" }
